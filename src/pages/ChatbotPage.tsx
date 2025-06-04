@@ -5,7 +5,8 @@ interface Agent {
   id: string;
   name: string;
   avatar: string;
-  topics: string[];
+  abilities: string[];
+  color: string;
 }
 
 interface Message {
@@ -20,13 +21,36 @@ const agents: Agent[] = [
     id: 'mark',
     name: 'Mark',
     avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=mark',
-    topics: ['AI Research', 'Data Science', 'Machine Learning']
+    abilities: ['Event Planning', 'Activity Recommendations', 'Schedule Management'],
+    color: 'blue'
   },
   {
     id: 'athena',
     name: 'Athena',
     avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=athena',
-    topics: ['Natural Language Processing', 'Computer Vision', 'Robotics']
+    abilities: ['Real Estate/Investment', 'Property Analysis', 'Market Insights'],
+    color: 'purple'
+  },
+  {
+    id: 'nova',
+    name: 'Nova',
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=nova',
+    abilities: ['Booking and Logistics', 'Travel Planning', 'Transportation'],
+    color: 'green'
+  },
+  {
+    id: 'atlas',
+    name: 'Atlas',
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=atlas',
+    abilities: ['Place Discovery', 'Local Recommendations', 'Cultural Insights'],
+    color: 'orange'
+  },
+  {
+    id: 'luna',
+    name: 'Luna',
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=luna',
+    abilities: ['Entertainment Guide', 'Activity Matching', 'Social Planning'],
+    color: 'pink'
   }
 ];
 
@@ -62,7 +86,7 @@ const ChatbotPage: React.FC = () => {
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `This is a response from ${selectedAgent?.name || 'the bot'}`,
+        text: `This is a response from ${selectedAgent?.name || 'the bot'} about ${selectedAgent?.abilities[0] || 'general topics'}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -73,28 +97,49 @@ const ChatbotPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Left Sidebar - AI Agents */}
-      <div className="w-24 bg-white border-r border-slate-200 flex flex-col items-center py-6 space-y-6">
-        {agents.map(agent => (
-          <button
-            key={agent.id}
-            onClick={() => setSelectedAgent(agent)}
-            className={`w-16 h-16 rounded-full overflow-hidden border-2 transition-colors ${
-              selectedAgent?.id === agent.id 
-                ? 'border-blue-500 shadow-lg' 
-                : 'border-transparent hover:border-blue-200'
-            }`}
-          >
-            <img 
-              src={agent.avatar} 
-              alt={agent.name}
-              className="w-full h-full object-cover"
-            />
-          </button>
-        ))}
+      <div className="w-64 bg-white border-r border-slate-200 flex flex-col py-6">
+        <h2 className="px-6 text-lg font-semibold text-slate-800 mb-4">AI Agents</h2>
+        <div className="space-y-4 px-4">
+          {agents.map(agent => (
+            <div key={agent.id} className="space-y-2">
+              <button
+                onClick={() => setSelectedAgent(agent)}
+                className={`w-full p-3 rounded-lg flex items-center gap-3 transition-colors ${
+                  selectedAgent?.id === agent.id 
+                    ? `bg-${agent.color}-50 border-2 border-${agent.color}-500` 
+                    : 'hover:bg-slate-50 border-2 border-transparent'
+                }`}
+              >
+                <img 
+                  src={agent.avatar} 
+                  alt={agent.name}
+                  className="w-12 h-12 rounded-full"
+                />
+                <div className="text-left">
+                  <div className="font-medium text-slate-800">{agent.name}</div>
+                  <div className="text-sm text-slate-500">{agent.abilities[0]}</div>
+                </div>
+              </button>
+              
+              {selectedAgent?.id === agent.id && (
+                <div className="pl-16 space-y-1">
+                  {agent.abilities.map((ability, index) => (
+                    <div 
+                      key={index}
+                      className={`text-sm py-1 px-3 rounded-full bg-${agent.color}-50 text-${agent.color}-700 inline-block mr-2 mb-2`}
+                    >
+                      {ability}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Middle Section - Chat */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col max-h-screen">
         {/* Chat Header */}
         <div className="h-16 bg-white border-b border-slate-200 flex items-center px-6">
           {selectedAgent ? (
@@ -104,7 +149,10 @@ const ChatbotPage: React.FC = () => {
                 alt={selectedAgent.name}
                 className="w-8 h-8 rounded-full mr-3"
               />
-              <span className="font-medium text-slate-800">{selectedAgent.name}</span>
+              <div>
+                <div className="font-medium text-slate-800">{selectedAgent.name}</div>
+                <div className="text-sm text-slate-500">{selectedAgent.abilities[0]}</div>
+              </div>
             </div>
           ) : (
             <span className="text-slate-500">Select an AI agent to start chatting</span>
@@ -132,8 +180,8 @@ const ChatbotPage: React.FC = () => {
         </div>
 
         {/* Chat Input */}
-        <div className="h-24 bg-white border-t border-slate-200 p-4">
-          <div className="flex items-center gap-4 h-full">
+        <div className="bg-white border-t border-slate-200 p-4">
+          <div className="flex items-center gap-4">
             <input
               type="text"
               value={inputMessage}
