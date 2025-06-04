@@ -17,6 +17,7 @@ import PlacesSidebar from './components/PlacesSidebar';
 import HomePage from './pages/HomePage';
 import HealthPage from './pages/HealthPage';
 import ChefchaouenPage from './pages/ChefchaouenPage';
+import ChatbotPage from './pages/ChatbotPage';
 import { ExplorationMode } from './types';
 
 function App() {
@@ -179,6 +180,7 @@ function App() {
             <Route path="/" element={<HomePage mode={mode} />} />
             <Route path="/health" element={<HealthPage />} />
             <Route path="/africa/morocco/chefchaouen" element={<ChefchaouenPage />} />
+            <Route path="/chatbot" element={<ChatbotPage />} />
           </Routes>
         </main>
 
@@ -189,6 +191,7 @@ function App() {
               <span>Place2 © 2025</span>
             </div>
             <div className="flex gap-6">
+              <Link to="/chatbot" className="hover:text-blue-600 transition-colors">Chatbot</Link>
               <a href="#" className="hover:text-blue-600 transition-colors">About</a>
               <a href="#" className="hover:text-blue-600 transition-colors">Privacy</a>
               <a href="#" className="hover:text-blue-600 transition-colors">Terms</a>
